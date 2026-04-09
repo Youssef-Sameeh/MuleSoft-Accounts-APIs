@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="db890466-c241-46aa-a6a3-95406607ed87">
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="bf8a9128-f080-4d83-b438-233270eb31bb">
+		<salesforce:oauth-user-pass-connection consumerKey="3MVG9rZjd7MXFdLg6Cdm67.kJPEzbLFuKLZ.sI1tZ1FYQp0naDnTDz3T0URo_sRpipJtU4B47qdzbRwyvVEBD" consumerSecret="3502A56EFA6B6F4A6C17B5AF560607DC9E5CADF9C535436ED99B1BB0797B4453" username="youssefsameeh2013.8239954bc521@agentforce.com" password="Awesomeyoyo13" securityToken="CqW2PrhtbJLNjfWxovkCNxYK" />
+	</salesforce:sfdc-config>
+	<flow name="salesforce-accounts-apiFlow" doc:id="0304060d-d374-47b4-9aa8-8825ccc94188">
+		<http:listener doc:name="Listener" doc:id="dacf7423-b64f-4317-8a65-4cd9cefccf71" path="/accounts" config-ref="HTTP_Listener_config"/>
+		<salesforce:query doc:name="Query" doc:id="2fb6dfc4-31ea-4870-8193-61eea6cd346a" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query><![CDATA[SELECT Name, Industry, AnnualRevenue FROM Account LIMIT 10]]></salesforce:salesforce-query>
+		</salesforce:query>
+		<ee:transform doc:name="Transform Response" doc:id="a9d2707d-a58d-42c7-8cec-9af0a1e0115b">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+payload map (account) -> {
+    accountName: account.Name,
+    industry: account.Industry,
+    annualRevenue: account.AnnualRevenue
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<error-handling>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" type="ANY">
+				<ee:transform doc:name="Transform Error" doc:id="f305574a-9edb-4e3f-a719-bddf158eb0b8">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+    error: true,
+    message: "Failed to connect to Salesforce. Please try again later."
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="httpStatus">500</ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-continue>
+		</error-handling>
+	</flow>
+</mule>
