@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Salesforce Accounts API — MuleSoft Internship Project
 
 A simple REST API built with MuleSoft Anypoint Studio that connects to Salesforce and retrieves Account records.
@@ -137,3 +138,7 @@ HTTP Listener (/accounts) → Salesforce Query → DataWeave Transform → HTTP 
 2. **Salesforce Query** — Executes SOQL: `SELECT Name, Industry, AnnualRevenue FROM Account LIMIT 10`
 3. **DataWeave Transform** — Maps Salesforce fields to clean JSON output
 4. **Error Handler** — Returns a JSON error message if Salesforce connection fails
+=======
+# MuleSoft-Accounts-APIs
+A REST API that connects to Salesforce and retrieves account data.
+>>>>>>> 497ff2dcd4d79f2a6f0bcd75a4e4cb8c8e85d2eb

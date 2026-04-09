@@ -9,7 +9,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<http:listener-connection host="0.0.0.0" port="8081" />
 	</http:listener-config>
 	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="bf8a9128-f080-4d83-b438-233270eb31bb">
-		<salesforce:oauth-user-pass-connection consumerKey="3MVG9rZjd7MXFdLg6Cdm67.kJPEzbLFuKLZ.sI1tZ1FYQp0naDnTDz3T0URo_sRpipJtU4B47qdzbRwyvVEBD" consumerSecret="3502A56EFA6B6F4A6C17B5AF560607DC9E5CADF9C535436ED99B1BB0797B4453" username="youssefsameeh2013.8239954bc521@agentforce.com" password="Awesomeyoyo13" securityToken="CqW2PrhtbJLNjfWxovkCNxYK" />
+		<salesforce:oauth-user-pass-connection consumerKey="${salesforce.consumerKey}" consumerSecret="${salesforce.consumerSecret}" username="youssefsameeh2013.8239954bc521@agentforce.com" password="Awesomeyoyo13" securityToken="CqW2PrhtbJLNjfWxovkCNxYK" />
 	</salesforce:sfdc-config>
 	<flow name="salesforce-accounts-apiFlow" doc:id="0304060d-d374-47b4-9aa8-8825ccc94188">
 		<http:listener doc:name="Listener" doc:id="dacf7423-b64f-4317-8a65-4cd9cefccf71" path="/accounts" config-ref="HTTP_Listener_config"/>
